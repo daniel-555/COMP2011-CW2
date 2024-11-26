@@ -14,7 +14,7 @@ admin.add_view(ModelView(Like, db.session))
 def home():
     # Show the login page if logged out
     # if logged in show all posts in a feed ordered newestFirst/mostLiked/etc...
-    return render_template("base.html", title="Home")
+    return render_template("home.html", title="Home")
 
 @app.route("/user/<int:userId>", methods=['GET', 'POST'])
 def profile(userId=None):
@@ -33,13 +33,3 @@ def viewPost(postId=None):
     # view a specific post from a user in order to comment on it
     # redirect to login if logged out
     pass
-
-@app.route("/register", methods=['GET', 'POST'])
-def registerForm():
-    # The page containing the registration form
-    pass
-
-@app.route("/login")
-def loginForm():
-    # The page containing the login form
-    return render_template("loginPage.html", title="Login")

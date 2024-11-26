@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid ">
+    <div class="row">
+        <div class="col-12 col-md-3 col-xl-4"></div>
+        <div class="col-12 col-md-6 col-xl-4">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-danger">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+            <!-- Dynamic form title based on whether the page is accessed for creating or editing -->
+            {% if title=="Login" %}
+            <h2>Login</h2>
+            {% elif title=="Register" %}
+            <h2>Register</h2>
+            {% endif %}
+
+            <form action="" method="post" name="loginRegisterForm">
+                {{ form.hidden_tag() }} {{ form.username.label }} {{
+                form.username(class_='form-control') }}
+                <br />
+
+                {% if title=="Register" %}
+                {{ form.email.label }} {{ form.email(class_='form-control') }}
+                <br />
+                {% endif %}
+
+                {{ form.password.label }} {{ form.password(class_='form-control') }}
+                <br />
+
+                {% if title=="Register" %}
+                {{ form.confirmPassword.label }} {{ form.confirmPassword(class_='form-control') }}
+                <br />
+                {% endif %}
+
+                {% if title=="Login" %}
+                <p>Don't have an account? <a href="/register">Register Here</a></p>
+                {% elif title=="Register" %}
+                <p>Already have an accont? <a href="/login">Login Here</a></p>
+                {% endif %}
+
+                <input type="submit" value="{{title}}" class="btn btn-primary btn-block btn-lg" />
+
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}
