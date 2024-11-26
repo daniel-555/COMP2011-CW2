@@ -10,7 +10,7 @@ MAX_COMMENT_CONTENT_LENGTH = 200
 
 class RegisterLoginForm(FlaskForm):
     username = StringField("Username", validators=[DataRequired(), Length(max=MAX_USERNAME_LENGTH)])
-    email = EmailField("Email Address" validators=[Email(), Length(max=MAX_EMAIL_LENGTH)])
+    email = EmailField("Email Address", validators=[Email(), Length(max=MAX_EMAIL_LENGTH)])
     password = PasswordField("Password", validators=[DataRequired()])
     confirmPassword = PasswordField("Confirm Password")
 
