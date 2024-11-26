@@ -26,12 +26,10 @@ def register():
 
         login_user(new_user)
 
-
-
+        return redirect("/")
 
     elif form.errors:
         flash(list(form.errors.values())[0][0])
-        print(form.errors)
 
     return render_template("loginPage.html", title="Register", form=form)
 
@@ -40,8 +38,15 @@ def login():
     form = LoginForm()
 
     if form.validate_on_submit():
-        # Log the user in
-        pass
+        user = db.session.execute(db.select(User).filter_by(username=form.username.data)).scalar()
+        if user and form.password.data == user.password:
+                login_user(user)
+                return redirect("/")
+        else:
+            flash("Invalid username or password")
+        
+    elif form.errors:
+        flash(list(form.errors.values())[0][0])
 
     return render_template("loginPage.html", title="Login", form=form)
 
