@@ -5,7 +5,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
     username = db.Column(db.String(100), nullable=False, unique=True)
-    password = db.Column(db.string(255))
+    password = db.Column(db.String(255))
     email = db.Column(db.String(100), unique=True)
 
     posts = db.relationship('Post', backref='author', lazy=True)
@@ -23,7 +23,7 @@ class Post(db.Model):
     comments = db.relationship('Comment', backref='post', lazy=True)
     likes = db.relationship('Like', backref='post', lazy=True)
 
-class Comment:
+class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
     comment_creator = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -32,7 +32,7 @@ class Comment:
     content = db.Column(db.String(200))
     
 
-class Like:
+class Like(db.Model):
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'), primary_key=True, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, nullable=False)
 
