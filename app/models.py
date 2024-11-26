@@ -17,6 +17,7 @@ class Post(db.Model):
 
     post_author = db.Column(db.Integer, db.ForeignKey('user.id'))
 
+    title = db.Column(db.String(50), nullable=False, default="TITLE")
     content = db.Column(db.String(1000))
     created_at = db.Column(db.DateTime, default=datetime.now())
 
