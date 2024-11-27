@@ -1,7 +1,9 @@
-from flask import render_template
+from flask import redirect, render_template
+from flask_login import current_user
 from app import app, db, admin
 from flask_admin.contrib.sqla import ModelView
 from .models import User, Post, Comment, Like
+from .forms import PostForm
 
 # Temporary for development, remove for final build
 admin.add_view(ModelView(User, db.session))
@@ -26,7 +28,12 @@ def profile(userId=None):
 def createPost():
     # form to create a post if logged in
     # redirect to login page if logged out
-    pass
+    if not current_user.is_authenticated:
+        return redirect("/")
+
+    form = PostForm()
+
+    return render_template("createPost.html", title="Create Post", form=form)
 
 @app.route("/view-post/<int:postId>", methods=['GET', 'POST'])
 def viewPost(postId=None):

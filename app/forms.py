@@ -19,8 +19,8 @@ class LoginForm(FlaskForm):
     password = PasswordField("Password", validators=[DataRequired()])
 
 class PostForm(FlaskForm):
-    title = StringField("Comment", validators=[DataRequired(), Length(max=MAX_TITLE_LENGTH)])
-    content = StringField("Comment", validators=[Length(max=MAX_POST_CONTENT_LENGTH)])
+    title = StringField("Post Title", validators=[DataRequired(), Length(max=MAX_TITLE_LENGTH)])
+    content = TextAreaField("Text", validators=[DataRequired(), Length(max=MAX_POST_CONTENT_LENGTH)])
 
 class CommentForm(FlaskForm):
-    content = StringField("Comment", validators=[DataRequired(), Length(max=MAX_COMMENT_CONTENT_LENGTH)])
+    content = TextAreaField("Comment", validators=[DataRequired(), Length(max=MAX_COMMENT_CONTENT_LENGTH)])
