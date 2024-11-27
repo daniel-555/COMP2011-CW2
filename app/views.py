@@ -22,7 +22,8 @@ def home():
 def profile(userId=None):
     # Show a user's profile page if logged in
     # redirect to login page if logged out
-    pass
+        
+    return render_template("base.html", title="User Profile Page")
 
 @app.route("/create-post", methods=['GET', 'POST'])
 def createPost():
@@ -33,7 +34,19 @@ def createPost():
 
     form = PostForm()
 
-    return render_template("createPost.html", title="Create Post", form=form)
+    if form.validate_on_submit():
+        post_author = current_user.get_id()
+        title = form.title.data
+        content = form.content.data
+
+        new_post = Post(post_author=post_author, title=title, content=content)
+
+        db.session.add(new_post)
+        db.session.commit()
+
+        return redirect(f"/user/{post_author}")
+
+    return render_template("createPost.html", title="Create a Post", form=form)
 
 @app.route("/view-post/<int:postId>", methods=['GET', 'POST'])
 def viewPost(postId=None):

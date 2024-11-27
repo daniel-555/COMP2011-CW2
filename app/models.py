@@ -20,7 +20,7 @@ class Post(db.Model):
 
     title = db.Column(db.String(50), nullable=False, default="TITLE")
     content = db.Column(db.String(1000))
-    created_at = db.Column(db.DateTime, default=datetime.now())
+    created_at = db.Column(db.DateTime, default=datetime.now)
 
     comments = db.relationship('Comment', backref='post', lazy=True)
     likes = db.relationship('Like', backref='post', lazy=True)
@@ -32,13 +32,14 @@ class Comment(db.Model):
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
 
     content = db.Column(db.String(200))
+    created_at = db.Column(db.DateTime, default=datetime.now)
     
 
 class Like(db.Model):
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'), primary_key=True, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, nullable=False)
 
-    liked_at = db.Column(db.DateTime(), default=datetime.now())
+    liked_at = db.Column(db.DateTime(), default=datetime.now)
 
 
 # Implement if there is time
