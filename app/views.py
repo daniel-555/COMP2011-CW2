@@ -43,6 +43,9 @@ def profile(username=None):
     
     user_id = db.session.execute(db.select(User.id).filter_by(username=username)).scalar()
 
+    if not user_id:
+        return redirect("/")
+    
     user_posts = db.session.execute(db.select(Post).filter_by(post_author=user_id))
     post_data = [post[0] for post in user_posts]
 
