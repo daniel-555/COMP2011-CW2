@@ -1,0 +1,15 @@
+<!-- Render a card from the provided data -->
+{% macro newCard(postData) -%}
+<div class="card border-secondary">
+    <div class="card-body">
+        <h5 class="card-title">{{ postData.title }}</h5>
+        <p class="card-text">{{ postData.content }}</p>
+
+        <div class="btn-group btn-block mt-2" role="group">
+            <!-- edit and delete buttons are instanced per-card so that the correct card is edited/deleted -->
+            <button class="btn btn-outline-success like-button" id="{{ postData.id }}">Like</button>
+            <a type="button" class="btn btn-outline-primary" href="#">View Post or Comment</a>
+        </div>
+    </div>
+</div>
+{%- endmacro %}

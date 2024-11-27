@@ -11,21 +11,24 @@ admin.add_view(ModelView(Post, db.session))
 admin.add_view(ModelView(Comment, db.session))
 admin.add_view(ModelView(Like, db.session))
 
+# Test post data to check that posts render as they should
+# Will be replaced with database entries after the query is implemented
+postData=[{"id": x, "title": "test title", "content": f"this is the body of post number {x}"} for x in range(20)]
 
 @app.route("/", methods=['GET'])
 def home():
     # Show the login page if logged out
     # if logged in show all posts in a feed ordered newestFirst/mostLiked/etc...
-    return render_template("home.html", title="Home")
+    return render_template("home.html", title="Home", postData=postData)
 
 @app.route("/user/<string:username>", methods=['GET', 'POST'])
 def profile(username=None):
     # Show a user's profile page if logged in
     # redirect to login page if logged out
     
+    
 
-
-    return render_template("userProfilePage.html", title=f"{username}")
+    return render_template("userProfilePage.html", title=f"{username}", postData=postData)
 
 @app.route("/create-post", methods=['GET', 'POST'])
 def createPost():

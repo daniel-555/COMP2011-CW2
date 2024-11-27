@@ -1,8 +1,14 @@
 {% extends "base.html" %}
+{% from "postCard.html" import newCard %}
 {% block content %}
 
 {% if current_user.is_authenticated %}
 <h1>You are logged in</h1>
+{% for post in postData %}
+{{ newCard(post) }}
+<br />
+{% endfor %}
+
 
 {% else %}
 <div class="jumbotron">
