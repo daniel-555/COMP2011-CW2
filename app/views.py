@@ -13,22 +13,41 @@ admin.add_view(ModelView(Like, db.session))
 
 # Test post data to check that posts render as they should
 # Will be replaced with database entries after the query is implemented
-postData=[{"id": x, "title": "test title", "content": f"this is the body of post number {x}"} for x in range(20)]
 
 @app.route("/", methods=['GET'])
 def home():
     # Show the login page if logged out
     # if logged in show all posts in a feed ordered newestFirst/mostLiked/etc...
-    return render_template("home.html", title="Home", postData=postData)
+
+    data = []
+
+    if current_user.is_authenticated:
+        post_data = db.session.execute(db.select(Post).order_by(Post.created_at))
+        post_data = [post[0] for post in post_data]
+
+        for post in post_data:
+            username = db.session.execute(db.select(User.username).filter_by(id=post.post_author)).scalar()
+            data.append((post, username))
+
+
+
+
+    return render_template("home.html", title="Home", post_data=data)
 
 @app.route("/user/<string:username>", methods=['GET', 'POST'])
 def profile(username=None):
     # Show a user's profile page if logged in
     # redirect to login page if logged out
+    if not current_user.is_authenticated:
+        return redirect("/")
     
-    
+    user_id = db.session.execute(db.select(User.id).filter_by(username=username)).scalar()
 
-    return render_template("userProfilePage.html", title=f"{username}", postData=postData)
+    user_posts = db.session.execute(db.select(Post).filter_by(post_author=user_id))
+    post_data = [post[0] for post in user_posts]
+
+
+    return render_template("userProfilePage.html", title=f"{username}", postData=post_data)
 
 @app.route("/create-post", methods=['GET', 'POST'])
 def createPost():

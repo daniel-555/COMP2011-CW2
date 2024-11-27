@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "postCard.html" import newCard %}
+{% from "postCard.html" import new_card %}
 {% block content %}
 <h1 class="display-4">{{title}}</h1>
 <hr class="my-4">
@@ -16,7 +16,7 @@
 <hr class="my-4">
 <h2>Posts</h2>
 {% for i in postData %}
-{{ newCard(i) }}
+{{ new_card(i) }}
 <br />
 {% endfor %}
 {% endblock content %}
