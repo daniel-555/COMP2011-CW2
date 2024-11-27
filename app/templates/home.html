@@ -1,8 +1,18 @@
 {% extends "base.html" %}
 {% block content %}
+
 {% if current_user.is_authenticated %}
 <h1>You are logged in</h1>
+
 {% else %}
-<h1>You are logged out</h1>
+<div class="jumbotron">
+    <h1 class="display-4">It seems you are logged out</h1>
+    <p class="lead">This website requires you to be logged in to use its features.</p>
+    <hr class="my-4">
+    <p>Please login to your account or if you don't have one, create one!
+    </p>
+    <a class="btn btn-outline-primary btn-lg btn-block" href="/register" role="button">Register</a>
+    <a class="btn btn-primary btn-lg btn-block" href="/login" role="button">Login</a>
+</div>
 {% endif %}
 {% endblock content %}

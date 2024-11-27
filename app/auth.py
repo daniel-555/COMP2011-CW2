@@ -1,5 +1,5 @@
 from flask import render_template, flash, redirect
-from flask_login import login_required, login_user
+from flask_login import current_user, login_required, login_user, logout_user
 from app import app, db, login_manager
 from .models import User
 from .forms import LoginForm, RegisterForm
@@ -10,6 +10,9 @@ def loader_user(user_id):
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
+    if current_user.is_authenticated:
+        return redirect("/")
+
     form = RegisterForm()
 
     if form.validate_on_submit():
@@ -33,8 +36,13 @@ def register():
 
     return render_template("loginPage.html", title="Register", form=form)
 
+
 @app.route("/login", methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect("/")
+
+
     form = LoginForm()
 
     if form.validate_on_submit():
@@ -50,7 +58,8 @@ def login():
 
     return render_template("loginPage.html", title="Login", form=form)
 
+
 @app.route("/logout", methods=['GET', 'POST'])
-@login_required
 def logout():
-    pass
+    logout_user()
+    return redirect("/")
