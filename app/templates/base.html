@@ -15,7 +15,7 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-sm navbar-dark bg-dark mb-0">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark mb-0">
         <!-- <div class=" col-md-3 col-xl-4"></div> -->
         <a href="/" class="navbar-brand h1 mb-0">Blogr</a>
         {% if current_user.is_authenticated %}
@@ -44,14 +44,12 @@
         <div class="row">
             <div class="col-12 col-md-3 col-xl-4"></div>
             <div class="col-12 col-md-6 col-xl-4 mt-3">
-
+                <div class="my-5"></div>
                 {% block content %}{% endblock content %}
-
             </div>
             <div class="col-12 col-md-3 col-xl-4"></div>
         </div>
     </div>
-
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha384-1H217gwSVyLSIfaLxHbE7dRb3v4mYCKbpQvzx0cegeju1MVsGrX5xXxAvs/HgeFs"
         crossorigin="anonymous"></script>
