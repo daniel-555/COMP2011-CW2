@@ -49,8 +49,16 @@ def userPage(username=None):
         return redirect("/")
  
     likes_received = sum([len(post.likes) for post in user.posts])
+    comments_made = len(user.comments)
+    comments_received = sum([len(post.comments) for post in user.posts])
 
-    return render_template("userProfilePage.html", title=f"{username}", posts=user.posts, likes_received=likes_received)
+    user_stats = {
+        "likes_received": likes_received,
+        "comments_made": comments_made,
+        "comments_received": comments_received
+    }
+
+    return render_template("userProfilePage.html", title=f"{username}", posts=user.posts, user_stats=user_stats)
 
 @app.route("/create-post", methods=['GET', 'POST'])
 def createPost():
