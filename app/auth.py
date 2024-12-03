@@ -22,7 +22,8 @@ def register():
         email = form.email.data
         password = form.password.data
 
-        new_user = User(username=username, email=email, password=password)
+        new_user = User(username=username, email=email)
+        new_user.set_password(password)
 
         db.session.add(new_user)
         db.session.commit()
@@ -47,7 +48,7 @@ def login():
 
     if form.validate_on_submit():
         user = db.session.execute(db.select(User).filter_by(username=form.username.data)).scalar()
-        if user and form.password.data == user.password:
+        if user and user.check_password(form.password.data):
                 login_user(user)
                 return redirect("/")
         else:
