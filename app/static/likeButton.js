@@ -11,6 +11,13 @@ $(document).ready(function () {
             success: (response) => {
                 console.log(response.message);
                 $(this).text(`Like Post (${response.like_count})`);
+
+                try {
+                    if (response.status != 'liked already') {
+                        var likes_received = Number($("#likes-received").text());
+                        $("#likes-received").text(likes_received+1);
+                    }
+                } catch {}
             },
             error: (err) => console.log(err)
         });

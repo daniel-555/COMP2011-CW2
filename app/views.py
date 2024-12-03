@@ -40,10 +40,10 @@ def home():
 def userPage(username=None):
     # Show a user's profile page if logged in
     # redirect to login page if logged out
-    if not current_user.is_authenticated and not username:
+    if not current_user.is_authenticated:
         return redirect("/")
     
-
+    # if no username is provided then show the currently logged in user's page
     if username:
         user = db.session.execute(db.select(User).filter_by(username=username)).scalar()
     else:
@@ -54,15 +54,24 @@ def userPage(username=None):
     if not user:
         return redirect("/")
     
-    posts = user.posts
     data = []
-    for post in posts:
+    likes_received = 0
+
+    for post in user.posts:
         likes = len(post.likes)
         data.append((post, username, likes))
 
+        likes_received += likes
 
 
-    return render_template("userProfilePage.html", title=f"{username}", post_data=data)
+
+    user_data = {
+        'likes_received': likes_received
+    }
+
+
+
+    return render_template("userProfilePage.html", title=f"{username}", post_data=data, user_data=user_data)
 
 @app.route("/create-post", methods=['GET', 'POST'])
 def createPost():
@@ -129,7 +138,7 @@ def likePost():
     for like in user.likes:
         if like in post.likes:
             # Post is already liked by the user
-            return json.dumps({'status': 200, 'message': 'Post has already been liked by the user', 'like_count': len(post.likes)})
+            return json.dumps({'status': 'liked already', 'message': 'Post has already been liked by the user', 'like_count': len(post.likes)})
     
     # Post hasn't been liked yet
     like = Like(user_id=user_id, post_id=post_id)
