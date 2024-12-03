@@ -14,7 +14,7 @@
     <dd class="col-sm-9">{{ user_stats.comments_received }}</dd>
 </dl>
 <hr class="my-4">
-<h2>Posts</h2>
+<h2>Posts ({{ posts | length }})</h2>
 {% for post in posts %}
 {{ new_card(post) }}
 <br />
