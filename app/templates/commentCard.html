@@ -1,9 +1,9 @@
 <!-- Render a card from the provided data -->
-{% macro new_card(comment_data, creator) -%}
+{% macro new_card(comment_data) -%}
 <div class="card border-secondary">
     <div class="card-body">
-        <a href="/user/{{creator}}">
-            <h6 class="card-subtitle mb-2 text-muted">Commented by {{ creator }}</h6>
+        <a href="/user/{{comment_data.commentor.username}}">
+            <h6 class="card-subtitle mb-2 text-muted">Commented by {{ comment_data.commentor.username }}</h6>
         </a>
 
         <p class="card-text">{{ comment_data.content }}</p>

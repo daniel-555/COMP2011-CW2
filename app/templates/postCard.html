@@ -16,7 +16,7 @@
                 post_data.likes | length
                 }})</button>
             <a type="button" class="btn btn-outline-primary" href="/view-post/{{ post_data.id }}">View Post or
-                Comment</a>
+                Comment ({{ post_data.comments | length }})</a>
         </div>
     </div>
     <div class="card-footer text-muted">

@@ -8,13 +8,21 @@
 </a>
 <p>{{ post.content }}</p>
 <hr class="my-4">
-<button class="btn btn-outline-primary like-button" id="{{post.id}}">Like Post ({{ post.likes | length }})</button>
+<button class="btn btn-outline-success like-button" id="{{post.id}}">Like Post ({{ post.likes | length }})</button>
 <br>
 <br>
-<h2>Comments</h2>
-
+<h2>Comments ({{ post.comments | length }})</h2>
+<form action="" method="post" name="createCommentForm">
+    {{ form.hidden_tag() }}
+    {{ form.content.label}}
+    {{ form.content(class_='form-control', rows=3)}}
+    <br>
+    <button type="submit" class="btn btn-primary">Post Comment</button>
+</form>
+<br>
 {% for comment in post.comments %}
 {{ new_card(comment) }}
+<br>
 {% endfor %}
 
 {% endblock content %}
