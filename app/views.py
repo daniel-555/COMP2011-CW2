@@ -106,8 +106,31 @@ def viewPost(post_id=None):
 
 @app.route("/like-post", methods=['POST'])
 def likePost():
+    # check if the user has already liked the post
+    # if not then create a new like table entry
+    # return the updated like count
+
     data = json.loads(request.data)
     post_id = data.get('post_id')
     user_id = current_user.get_id()
-    print(data)
-    return json.dumps({'status': 'OK', 'response': f'{user_id} pressed the like button for post {post_id}'})
+
+    user = db.session.execute(db.select(User).filter_by(id=user_id)).scalar()
+    post = db.session.execute(db.select(Post).filter_by(id=post_id)).scalar()
+
+    if not user or not post:
+        return json.dumps({'status': '400', 'response': "user or post does not exist"})
+    
+    for like in user.likes:
+        if like in post.likes:
+            # Post is already liked by the user
+            return json.dumps({'status': 200, 'message': 'Post has already been liked by the user', 'like_count': len(post.likes)})
+    
+    # Post hasn't been liked yet
+    like = Like(user_id=user_id, post_id=post_id)
+    db.session.add(like)
+    db.session.commit()
+
+    return json.dumps({'status': 200, 'message': 'Post added to user\'s likes', 'like_count': len(post.likes)})
+
+    
+

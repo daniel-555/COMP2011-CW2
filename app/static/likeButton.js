@@ -8,9 +8,11 @@ $(document).ready(function () {
             data: JSON.stringify({ post_id: post_id }),
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-            success: function (response) {
-                console.log(response);
-            }
+            success: (response) => {
+                console.log(response.message);
+                $(this).text(`Like Post (${response.like_count})`);
+            },
+            error: (err) => console.log(err)
         });
     });
 });
