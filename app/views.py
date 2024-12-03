@@ -37,13 +37,19 @@ def home():
 
 @app.route("/user/<string:username>", methods=['GET', 'POST'])
 @app.route("/user", methods=['GET', 'POST'])
-def profile(username=None):
+def userPage(username=None):
     # Show a user's profile page if logged in
     # redirect to login page if logged out
-    if not current_user.is_authenticated or not username:
+    if not current_user.is_authenticated and not username:
         return redirect("/")
     
-    user = db.session.execute(db.select(User).filter_by(username=username)).scalar()
+
+    if username:
+        user = db.session.execute(db.select(User).filter_by(username=username)).scalar()
+    else:
+        user = db.session.execute(db.select(User).filter_by(id=current_user.get_id())).scalar()
+        username = user.username
+
 
     if not user:
         return redirect("/")
