@@ -21,19 +21,20 @@ def home():
     # Show the login page if logged out
     # if logged in show all posts in a feed ordered newestFirst/mostLiked/etc...
 
-    data = []
+    posts = []
 
     if current_user.is_authenticated:
         posts = db.session.execute(db.select(Post).order_by(Post.created_at))
         posts = [post[0] for post in posts]
 
-        for post in posts:
-            likes = len(post.likes)
-            username = db.session.execute(db.select(User.username).filter_by(id=post.post_author)).scalar()
-            data.append((post, username, likes))
+        # for post in posts:
+        #     likes = len(post.likes)
+        #     username = db.session.execute(db.select(User.username).filter_by(id=post.post_author)).scalar()
+        #     data.append((post, username, likes))
 
 
-    return render_template("home.html", title="Home", post_data=data)
+
+    return render_template("home.html", title="Home", posts=posts)
 
 @app.route("/user/<string:username>", methods=['GET', 'POST'])
 @app.route("/user", methods=['GET', 'POST'])
@@ -48,30 +49,14 @@ def userPage(username=None):
         user = db.session.execute(db.select(User).filter_by(username=username)).scalar()
     else:
         user = db.session.execute(db.select(User).filter_by(id=current_user.get_id())).scalar()
-        username = user.username
 
 
     if not user:
         return redirect("/")
-    
-    data = []
-    likes_received = 0
+ 
+    likes_received = sum([len(post.likes) for post in user.posts])
 
-    for post in user.posts:
-        likes = len(post.likes)
-        data.append((post, username, likes))
-
-        likes_received += likes
-
-
-
-    user_data = {
-        'likes_received': likes_received
-    }
-
-
-
-    return render_template("userProfilePage.html", title=f"{username}", post_data=data, user_data=user_data)
+    return render_template("userProfilePage.html", title=f"{username}", posts=user.posts, likes_received=likes_received)
 
 @app.route("/create-post", methods=['GET', 'POST'])
 def createPost():
@@ -110,14 +95,16 @@ def viewPost(post_id=None):
     # data = {'title': 'This is the post title', 'content': 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Esse expedita consectetur corrupti a, impedit veniam delectus quas perspiciatis atque aliquam quo commodi laudantium magnam libero, iusto incidunt, labore voluptas! Architecto omnis, ipsum vel nisi facere esse saepe explicabo cumque, iste illum aliquam tempore corrupti asperiores? Quaerat natus, tempora pariatur repudiandae repellat omnis cumque, architecto expedita animi totam dolore consequuntur dolores qui, nobis similique mollitia in reiciendis ducimus beatae perspiciatis voluptatibus alias laborum est ea. Repellendus, necessitatibus? Placeat eum dolorem maiores, delectus ipsam eaque rem unde perferendis aut explicabo praesentium. Quam at excepturi quo, animi ipsam autem iusto atque expedita aliquid.'}
 
     post = db.session.execute(db.select(Post).filter_by(id=post_id)).scalar()
-    likes = len(post.likes)
+    # likes = len(post.likes)
+    # author = post.author
 
-    data = {
-        'post': post,
-        'likes': likes 
-    }
+    # data = {
+    #     'post': post,
+    #     'likes': likes,
+    #     'author': author.username
+    # }
 
-    return render_template("viewPost.html", title=f"viewing post {post_id}", data=data)
+    return render_template("viewPost.html", title=f"viewing post {post_id}", post=post)
 
 @app.route("/like-post", methods=['POST'])
 def likePost():

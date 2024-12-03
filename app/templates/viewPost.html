@@ -1,12 +1,20 @@
 {% extends "base.html" %}
+{% from "commentCard.html" import new_card %}
+
 {% block content %}
-<h1>{{data.post.title}}</h1>
-<p>{{data.post.content}}</p>
+<h1>{{post.title}}</h1>
+<a href="/user/{{post.author.username}}">
+    <h4 class="text-muted">Created by {{post.author.username }}</h4>
+</a>
+<p>{{ post.content }}</p>
 <hr class="my-4">
-<button class="btn btn-outline-primary like-button" id="{{data.post.id}}">Like Post ({{data.likes}})</button>
+<button class="btn btn-outline-primary like-button" id="{{post.id}}">Like Post ({{ post.likes | length }})</button>
 <br>
 <br>
 <h2>Comments</h2>
 
+{% for comment in post.comments %}
+{{ new_card(comment) }}
+{% endfor %}
 
 {% endblock content %}
