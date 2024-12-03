@@ -20,7 +20,7 @@
     <button type="submit" class="btn btn-primary">Post Comment</button>
 </form>
 <br>
-{% for comment in post.comments %}
+{% for comment in post.comments | reverse %}
 {{ new_card(comment) }}
 <br>
 {% endfor %}

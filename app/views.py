@@ -24,7 +24,7 @@ def home():
     posts = []
 
     if current_user.is_authenticated:
-        posts = db.session.execute(db.select(Post).order_by(Post.created_at))
+        posts = db.session.execute(db.select(Post).order_by(Post.created_at.desc()))
         posts = [post[0] for post in posts]
 
     return render_template("home.html", title="Home", posts=posts)
@@ -58,7 +58,7 @@ def userPage(username=None):
         "comments_received": comments_received
     }
 
-    return render_template("userProfilePage.html", title=f"{username}", posts=user.posts, user_stats=user_stats)
+    return render_template("userProfilePage.html", title=f"{username}", posts=list(reversed(user.posts)), user_stats=user_stats)
 
 @app.route("/create-post", methods=['GET', 'POST'])
 def createPost():
