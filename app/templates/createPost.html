@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <h1>Create a Post</h1>
-<form action="" method="post" name="loginRegisterForm">
+<form action="" method="post" name="createPostForm">
     {{ form.hidden_tag() }}
     {{ form.title.label }} {{ form.title(class_="form-control") }}
     <br />
