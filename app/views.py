@@ -14,21 +14,6 @@ admin.add_view(ModelView(Like, db.session))
 # Test post data to check that posts render as they should
 # Will be replaced with database entries after the query is implemented
 
-def get_posts(user_filter=None):
-    post_data = db.session.execute(db.select(Post).order_by(Post.created_at))
-    post_data = [post[0] for post in post_data]
-
-    data = []
-    for post in post_data:
-        username = db.session.execute(db.select(User.username).filter_by(id=post.post_author)).scalar()
-
-        if user_filter and post.post_author == user_filter:
-            data.append((post, username))
-        elif not user_filter:
-            data.append((post, username))
-    
-    return data
-
 
 @app.route("/", methods=['GET'])
 def home():
@@ -38,7 +23,13 @@ def home():
     data = []
 
     if current_user.is_authenticated:
-        data = get_posts()
+        posts = db.session.execute(db.select(Post).order_by(Post.created_at))
+        posts = [post[0] for post in posts]
+
+        for post in posts:
+            likes = len(post.likes)
+            username = db.session.execute(db.select(User.username).filter_by(id=post.post_author)).scalar()
+            data.append((post, username, likes))
 
 
     return render_template("home.html", title="Home", post_data=data)
@@ -51,12 +42,17 @@ def profile(username=None):
     if not current_user.is_authenticated or not username:
         return redirect("/")
     
-    user_id = db.session.execute(db.select(User.id).filter_by(username=username)).scalar()
+    user = db.session.execute(db.select(User).filter_by(username=username)).scalar()
 
-    if not user_id:
+    if not user:
         return redirect("/")
     
-    data = get_posts(user_filter=user_id)
+    posts = user.posts
+    data = []
+    for post in posts:
+        likes = len(post.likes)
+        data.append((post, username, likes))
+
 
 
     return render_template("userProfilePage.html", title=f"{username}", post_data=data)
@@ -87,9 +83,22 @@ def createPost():
     return render_template("createPost.html", title="Create a Post", form=form)
 
 @app.route("/view-post/<int:post_id>", methods=['GET', 'POST'])
+@app.route("/view-post", methods=['GET', 'POST'])
 def viewPost(post_id=None):
     # view a specific post from a user in order to comment on it
     # redirect to login if logged out
     
-    if not current_user.is_authenticated:
+    if not current_user.is_authenticated or not post_id:
         return redirect("/")
+    
+    # data = {'title': 'This is the post title', 'content': 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Esse expedita consectetur corrupti a, impedit veniam delectus quas perspiciatis atque aliquam quo commodi laudantium magnam libero, iusto incidunt, labore voluptas! Architecto omnis, ipsum vel nisi facere esse saepe explicabo cumque, iste illum aliquam tempore corrupti asperiores? Quaerat natus, tempora pariatur repudiandae repellat omnis cumque, architecto expedita animi totam dolore consequuntur dolores qui, nobis similique mollitia in reiciendis ducimus beatae perspiciatis voluptatibus alias laborum est ea. Repellendus, necessitatibus? Placeat eum dolorem maiores, delectus ipsam eaque rem unde perferendis aut explicabo praesentium. Quam at excepturi quo, animi ipsam autem iusto atque expedita aliquid.'}
+
+    post = db.session.execute(db.select(Post).filter_by(id=post_id)).scalar()
+    likes = len(post.likes)
+
+    data = {
+        'post': post,
+        'likes': likes 
+    }
+
+    return render_template("viewPost.html", title=f"viewing post {post_id}", data=data)

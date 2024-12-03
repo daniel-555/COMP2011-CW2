@@ -1,21 +1,21 @@
 <!-- Render a card from the provided data -->
-{% macro new_card(post_data, creator=None) -%}
+{% macro new_card(post_data, creator, num_likes) -%}
 <div class="card border-secondary">
     <div class="card-body">
         <h5 class="card-title">{{ post_data.title }}</h5>
 
-        {% if creator %}
         <a href="/user/{{creator}}">
             <h6 class="card-subtitle mb-2 text-muted">Created by {{ creator }}</h6>
         </a>
-        {% endif %}
 
         <p class="card-text">{{ post_data.content }}</p>
 
         <div class="btn-group btn-block mt-2" role="group">
             <!-- edit and delete buttons are instanced per-card so that the correct card is edited/deleted -->
-            <button class="btn btn-outline-success like-button" id="{{ post_data.id }}">Like</button>
-            <a type="button" class="btn btn-outline-primary" href="#">View Post or Comment</a>
+            <button class="btn btn-outline-success like-button" id="{{ post_data.id }}">Like Post ({{ num_likes
+                }})</button>
+            <a type="button" class="btn btn-outline-primary" href="/view-post/{{ post_data.id }}">View Post or
+                Comment</a>
         </div>
     </div>
     <div class="card-footer text-muted">
