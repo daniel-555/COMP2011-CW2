@@ -1,9 +1,10 @@
-from flask import redirect, render_template
+from flask import redirect, render_template, request
 from flask_login import current_user
 from app import app, db, admin
 from flask_admin.contrib.sqla import ModelView
 from .models import User, Post, Comment, Like
 from .forms import PostForm
+import json
 
 # Temporary for development, remove for final build
 admin.add_view(ModelView(User, db.session))
@@ -102,3 +103,11 @@ def viewPost(post_id=None):
     }
 
     return render_template("viewPost.html", title=f"viewing post {post_id}", data=data)
+
+@app.route("/like-post", methods=['POST'])
+def likePost():
+    data = json.loads(request.data)
+    post_id = data.get('post_id')
+    user_id = current_user.get_id()
+    print(data)
+    return json.dumps({'status': 'OK', 'response': f'{user_id} pressed the like button for post {post_id}'})
