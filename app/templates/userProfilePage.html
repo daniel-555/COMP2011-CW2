@@ -15,8 +15,8 @@
 </dl>
 <hr class="my-4">
 <h2>Posts</h2>
-{% for i in postData %}
-{{ new_card(i) }}
+{% for post in post_data %}
+{{ new_card(post[0], post[1]) }}
 <br />
 {% endfor %}
 {% endblock content %}

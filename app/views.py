@@ -14,6 +14,22 @@ admin.add_view(ModelView(Like, db.session))
 # Test post data to check that posts render as they should
 # Will be replaced with database entries after the query is implemented
 
+def get_posts(user_filter=None):
+    post_data = db.session.execute(db.select(Post).order_by(Post.created_at))
+    post_data = [post[0] for post in post_data]
+
+    data = []
+    for post in post_data:
+        username = db.session.execute(db.select(User.username).filter_by(id=post.post_author)).scalar()
+
+        if user_filter and post.post_author == user_filter:
+            data.append((post, username))
+        elif not user_filter:
+            data.append((post, username))
+    
+    return data
+
+
 @app.route("/", methods=['GET'])
 def home():
     # Show the login page if logged out
@@ -22,23 +38,17 @@ def home():
     data = []
 
     if current_user.is_authenticated:
-        post_data = db.session.execute(db.select(Post).order_by(Post.created_at))
-        post_data = [post[0] for post in post_data]
-
-        for post in post_data:
-            username = db.session.execute(db.select(User.username).filter_by(id=post.post_author)).scalar()
-            data.append((post, username))
-
-
+        data = get_posts()
 
 
     return render_template("home.html", title="Home", post_data=data)
 
 @app.route("/user/<string:username>", methods=['GET', 'POST'])
+@app.route("/user", methods=['GET', 'POST'])
 def profile(username=None):
     # Show a user's profile page if logged in
     # redirect to login page if logged out
-    if not current_user.is_authenticated:
+    if not current_user.is_authenticated or not username:
         return redirect("/")
     
     user_id = db.session.execute(db.select(User.id).filter_by(username=username)).scalar()
@@ -46,11 +56,10 @@ def profile(username=None):
     if not user_id:
         return redirect("/")
     
-    user_posts = db.session.execute(db.select(Post).filter_by(post_author=user_id))
-    post_data = [post[0] for post in user_posts]
+    data = get_posts(user_filter=user_id)
 
 
-    return render_template("userProfilePage.html", title=f"{username}", postData=post_data)
+    return render_template("userProfilePage.html", title=f"{username}", post_data=data)
 
 @app.route("/create-post", methods=['GET', 'POST'])
 def createPost():
@@ -81,4 +90,6 @@ def createPost():
 def viewPost(post_id=None):
     # view a specific post from a user in order to comment on it
     # redirect to login if logged out
-    pass
+    
+    if not current_user.is_authenticated:
+        return redirect("/")
