@@ -12,7 +12,7 @@
 
         <div class="btn-group btn-block mt-2" role="group">
             <!-- edit and delete buttons are instanced per-card so that the correct card is edited/deleted -->
-            <button class="btn btn-outline-success like-button" id="{{ post_data.id }}">Like Post ({{
+            <button class="btn btn-outline-primary like-button" id="{{ post_data.id }}">Like Post ({{
                 post_data.likes | length
                 }})</button>
             <a type="button" class="btn btn-outline-primary" href="/view-post/{{ post_data.id }}">View Post or
