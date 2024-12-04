@@ -1,6 +1,6 @@
 from flask import redirect, render_template, request
 from flask_login import current_user
-from app import app, db, admin
+from app import app, db
 from flask_admin.contrib.sqla import ModelView
 from .models import User, Post, Comment, Like
 from .forms import CommentForm, PostForm
