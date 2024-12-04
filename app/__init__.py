@@ -20,6 +20,6 @@ migrate = Migrate(app, db)
 login_manager = LoginManager(app)
 
 babel = Babel(app, locale_selector=get_locale)
-admin = Admin(app, template_mode='bootstrap4')
+# admin = Admin(app, template_mode='bootstrap4')
 
 from app import views, models, auth

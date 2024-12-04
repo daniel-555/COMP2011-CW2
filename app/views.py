@@ -7,10 +7,10 @@ from .forms import CommentForm, PostForm
 import json
 
 # Temporary for development, remove for final build
-admin.add_view(ModelView(User, db.session))
-admin.add_view(ModelView(Post, db.session))
-admin.add_view(ModelView(Comment, db.session))
-admin.add_view(ModelView(Like, db.session))
+# admin.add_view(ModelView(User, db.session))
+# admin.add_view(ModelView(Post, db.session))
+# admin.add_view(ModelView(Comment, db.session))
+# admin.add_view(ModelView(Like, db.session))
 
 # Test post data to check that posts render as they should
 # Will be replaced with database entries after the query is implemented
