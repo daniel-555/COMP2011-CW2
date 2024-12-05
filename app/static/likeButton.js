@@ -12,6 +12,7 @@ $(document).ready(function () {
                 console.log(response.message);
                 $(this).text(`Like Post (${response.like_count})`);
 
+                // update likes_received statistic if the post is liked on the user profile page
                 try {
                     if (response.status != 'liked already') {
                         var likes_received = Number($("#likes-received").text());
@@ -23,3 +24,4 @@ $(document).ready(function () {
         });
     });
 });
+
